@@ -13,6 +13,19 @@ bgImage.onload = function () {
 };
 bgImage.src = "images/bg.jpg";
 
+// Handle keyboard controls
+var keysDown = {};
+
+addEventListener("keydown", function (e) {
+	keysDown[e.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (e) {
+	delete keysDown[e.keyCode];
+}, false);
+
+
+
 // Hero image
 var heroReady = false;
 var heroImage = new Image();
