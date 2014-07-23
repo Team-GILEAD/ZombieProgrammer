@@ -12,3 +12,22 @@ bgImage.onload = function () {
  bgReady = true;
 };
 bgImage.src = "images/bg.jpg";
+
+// Draw everything
+var render = function () {
+ if (bgReady) {
+  ctx.drawImage(bgImage, 0, 0);
+ }
+};
+
+// The main game loop
+var main = function () {
+ var now = Date.now();
+ var delta = now - then;
+ 
+ update(delta / 1000);
+
+render();
+
+ then = now;
+};
