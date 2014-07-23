@@ -60,7 +60,14 @@ var main = function () {
 render();
 
  then = now;
+ 
+ // Request to do this again ASAP
+	requestAnimationFrame(main);
 };
+
+// Cross-browser support for requestAnimationFrame
+var w = window;
+requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
 // Play the game
 var then = Date.now();
