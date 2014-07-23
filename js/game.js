@@ -31,3 +31,14 @@ render();
 
  then = now;
 };
+
+// Play the game
+var then = Date.now();
+startGame();
+main();
+
+function startGame() {
+
+// here are the functions on the start of the game
+    
+}
