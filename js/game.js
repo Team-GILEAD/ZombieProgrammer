@@ -142,17 +142,17 @@ var main = function () {
 	var now = Date.now();
 	var delta = now - then;
 	
-	update(delta / 1000);
-    
 	//Lives checker
-	if (lives === 0) {
+	if (lives >0) {
+	update(delta / 1000);
+	render();
+	}	
+	else if (lives === 0) {
 	    ctx.fillStyle = "rgb(250, 250, 250)";
 	    ctx.font = "32px Helvetica";
 	    ctx.fillText("Game Over! Your score: " + points, 32,32);
 	}
-	else {
-	    render();
-	}
+	
 	
 	then = now;
 
