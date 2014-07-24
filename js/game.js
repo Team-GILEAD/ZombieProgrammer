@@ -1,30 +1,17 @@
-// Create the canvas
+// Create the canvas on the body
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 1024;
 canvas.height = 480;
 document.body.appendChild(canvas);
 
-//Insert background images
+// Background image
 var bgReady = false;
 var bgImage = new Image();
 bgImage.onload = function () {
- bgReady = true;
+	bgReady = true;
 };
 bgImage.src = "images/bg.jpg";
-
-// Handle keyboard controls
-var keysDown = {};
-
-addEventListener("keydown", function (e) {
-	keysDown[e.keyCode] = true;
-}, false);
-
-addEventListener("keyup", function (e) {
-	delete keysDown[e.keyCode];
-}, false);
-
-
 
 // Hero image
 var heroReady = false;
@@ -48,19 +35,23 @@ var hero = {
 };
 var monster = {};
 
-// Draw everything
-var render = function () {
-	 if (bgReady) {
-	  ctx.drawImage(bgImage, 0, 0);
-	 }
- 
- 	if (heroReady) {
-		ctx.drawImage(heroImage, hero.x, hero.y);
-	}
+// Handle keyboard controls
+var keysDown = {};
 
-	if (monsterReady) {
-		ctx.drawImage(monsterImage, monster.x, monster.y);
-	}
+addEventListener("keydown", function (e) {
+	keysDown[e.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (e) {
+	delete keysDown[e.keyCode]; //so the player stops after keyup
+}, false);
+
+// Release new monster when player go thru previous one
+var throwNewMonster = function () {
+	
+    // Throw the monster somewhere on the screen randomly
+    monster.x = canvas.width;
+    monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
 
 // Update game objects
@@ -78,25 +69,32 @@ var update = function (modifier) {
 		hero.x += hero.speed * modifier;
 	}
 
-	// Are they touching?
+	/* 
+	~Check for collision~
+	32 is pixel distance: center to edge of objects
+	*/
 	if (
 		hero.x <= (monster.x + 32)
 		&& monster.x <= (hero.x + 32)
 		&& hero.y <= (monster.y + 32)
 		&& monster.y <= (hero.y + 32)
 	) {
-	    lives--;
 		throwNewMonster();
 	}
 
-    // Monster Related
+    /* 
+	~Monster related~
+	Throw a monster condition
+	*/
 	monster.x -= 3;
 	if (monster.x < 0) {
-	    points += 20
 	    throwNewMonster();
 	}
 
-    //player related
+    /* 
+	~Player related~
+	Keeps the player in the playground
+	*/
 	if (hero.x < 0) {
 	    hero.x = 0;
 	}
@@ -112,22 +110,38 @@ var update = function (modifier) {
 
 };
 
+// Draw
+var render = function () {
+	if (bgReady) {
+		ctx.drawImage(bgImage, 0, 0);
+	}
+
+	if (heroReady) {
+		ctx.drawImage(heroImage, hero.x, hero.y);
+	}
+
+	if (monsterReady) {
+		ctx.drawImage(monsterImage, monster.x, monster.y);
+	}
+
+};
+
 // The main game loop
 var main = function () {
- var now = Date.now();
- var delta = now - then;
- 
- update(delta / 1000);
+	var now = Date.now();
+	var delta = now - then;
+	
+	update(delta / 1000);
+    
+	render();
+	
+	then = now;
 
-render();
-
- then = now;
- 
- // Request to do this again ASAP
+	// Request to do this again ASAP
 	requestAnimationFrame(main);
 };
 
-// Cross-browser support for requestAnimationFrame
+// Cross-browser support
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
@@ -137,10 +151,10 @@ startGame();
 main();
 
 function startGame() {
-	hero.x = canvas.width / 2;
+    hero.x = canvas.width / 2;
     hero.y = canvas.height / 2;
-    
-	// Throw the monster somewhere on the screen randomly
+
+    // Throw the monster somewhere on the screen randomly
     monster.x = 32 + (Math.random() * (canvas.width - 64));
     monster.y = 32 + (Math.random() * (canvas.height - 64));
 }
