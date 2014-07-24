@@ -1,3 +1,6 @@
+var points = 0;
+var lives = 3; //start lives
+
 // Create the canvas on the body
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
@@ -79,6 +82,7 @@ var update = function (modifier) {
 		&& hero.y <= (monster.y + 32)
 		&& monster.y <= (hero.y + 32)
 	) {
+		lives--;
 		throwNewMonster();
 	}
 
@@ -88,6 +92,7 @@ var update = function (modifier) {
 	*/
 	monster.x -= 3;
 	if (monster.x < 0) {
+		points += 20;
 	    throwNewMonster();
 	}
 
@@ -124,6 +129,12 @@ var render = function () {
 		ctx.drawImage(monsterImage, monster.x, monster.y);
 	}
 
+	// Score and Lives
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "24px Helvetica";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText("Lives: " + lives + "   Points: " + points, 32, 32);	
 };
 
 // The main game loop
@@ -133,7 +144,15 @@ var main = function () {
 	
 	update(delta / 1000);
     
-	render();
+	//Lives checker
+	if (lives === 0) {
+	    ctx.fillStyle = "rgb(250, 250, 250)";
+	    ctx.font = "32px Helvetica";
+	    ctx.fillText("Game Over! Your score: " + points, 32,32);
+	}
+	else {
+	    render();
+	}
 	
 	then = now;
 
