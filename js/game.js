@@ -37,7 +37,9 @@ monsterImage.src = "images/monster.png";
 
 // Game objects
 var hero = {
-	speed: 256 // movement in pixels per second
+	speed: 256, // movement in pixels per second
+	x: canvas.width / 2,
+	y: canvas.height / 2
 };
 var Monster = (function() {
 	function Monster(x,y) {
@@ -67,7 +69,8 @@ addEventListener("keyup", function (e) {
 // Release new monster
 var throwNewMonster = function () {
     // Throw the monster somewhere on the screen randomly
-	new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64)));
+	monsters.push(new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64))));
+	alert(monsters);
 };
 
 // Update game objects
@@ -98,7 +101,7 @@ var update = function (modifier) {
 		) {
 			lives--;
 			monsters.splice(i,1);
-			//throwNewMonster();
+			throwNewMonster();
 		}
 	}
 	
@@ -111,7 +114,7 @@ var update = function (modifier) {
 		if (monsters[i].x < 0) {
 			points += 20;
 			monsters.splice(i, 1); //remove monsters which are out of playground
-			//throwNewMonster();
+			throwNewMonster();
 		}
 	}
 
@@ -187,12 +190,5 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 // Play the game
 var then = Date.now();
-startGame();
+
 main();
-
-function startGame() {
-    hero.x = canvas.width / 2;
-    hero.y = canvas.height / 2;
-
-    //throwNewMonster();
-}
