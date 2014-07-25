@@ -39,7 +39,7 @@ monsterImage.src = "images/monster.png";
 // Game objects
 var hero = {
 	speed: 256, // movement in pixels per second
-	x: canvas.width / 2,
+	x: canvas.width / 4,
 	y: canvas.height / 2
 };
 var Monster = (function() {
