@@ -1,5 +1,5 @@
 var points = 0;
-var lives = 3; //start lives
+var playerLives = 3; //start lives
 
 // Create the canvas on the body
 var canvas = document.createElement("canvas");
@@ -8,6 +8,11 @@ canvas.width = 1024;
 canvas.height = 480;
 document.body.appendChild(canvas);
 
+/*
+----------------------
+---- Game Images -----
+----------------------
+*/
 // Background image
 var bgReady = false;
 var bgImage = new Image();
@@ -40,13 +45,27 @@ brainImage.onload = function () {
 };
 brainImage.src = "images/brain.png";
 
-// Game objects
+// Life image 
+var lifeReady = false;
+var lifeImage = new Image();
+lifeImage.onload = function () {
+	lifeReady = true;
+};
+lifeImage.src = "images/life.png";
+
+/*
+----------------------
+---- Game objects ----
+----------------------
+*/
+// Hero object
 var hero = {
 	speed: 256, // movement in pixels per second
 	x: canvas.width / 4,
 	y: canvas.height / 2
 };
 
+// Monsters objects
 var monsters = [];
 var monstersNum = 20;
 
@@ -59,6 +78,7 @@ var Monster = (function() {
 	return Monster;
 }());
 
+// Brains objects
 var brains = [];
 var brainsNum = 3;
 
@@ -71,7 +91,24 @@ var Brain = (function(){
 	return Brain;
 }())
 
+// Lives objects
+var lives = [];
+var livesNum = 3;
 
+var Life = (function(){
+	function Life(x,y,speed) {
+		this.x = x;
+		this.y = y;
+		this.speed = speed
+	}
+	return Life;
+}())
+
+/* 
+-------------------
+--Release objects--
+-------------------
+*/
 // Release new monster
 var throwNewMonster = function () {
     // Throw the monster somewhere on the screen randomly
@@ -90,7 +127,7 @@ for (var i = 0; i < monstersNum; i++) {
 // Release new brain
 var throwNewBrain = function () {
     // Throw the monster somewhere on the screen randomly
-	brains.push(new Monster(
+	brains.push(new Brain(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
 		32 + (Math.random() * (canvas.height - 64)), // Y position
 		(Math.floor((Math.random() * 8) + 1)) // Speed
@@ -101,6 +138,22 @@ var throwNewBrain = function () {
 for (var i = 0; i < brainsNum; i++) {
 	throwNewBrain();
 }
+
+// Release new life
+var throwNewLife = function () {
+    // Throw the life somewhere on the screen randomly
+	lives.push(new Life(
+		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
+		32 + (Math.random() * (canvas.height - 64)), // Y position
+		(Math.floor((Math.random() * 8) + 1)) // Speed
+	));
+};
+
+// Filling lives loops
+for (var i = 0; i < livesNum; i++) {
+	throwNewLife();
+}
+
 
 // Handle keyboard controls
 var keysDown = {};
@@ -142,7 +195,7 @@ var update = function (modifier) {
 			&& hero.y <= (monsters[i].y + 32)
 			&& monsters[i].y <= (hero.y + 32)
 		) {
-			lives--;
+			playerLives--;
 			monsters.splice(i,1);
 			throwNewMonster();
 		}
@@ -155,9 +208,22 @@ var update = function (modifier) {
 			&& hero.y <= (brains[i].y + 32)
 			&& brains[i].y <= (hero.y + 32)
 		) {
-			points += 100;
+			points += 1000;
 			brains.splice(i,1);
 			throwNewBrain();
+		}
+	}
+	// Lives Collision
+	for(var i = 0; i < lives.length; i++) {
+		if (
+			hero.x <= (lives[i].x + 32)
+			&& lives[i].x <= (hero.x + 32)
+			&& hero.y <= (lives[i].y + 32)
+			&& lives[i].y <= (hero.y + 32)
+		) {
+			playerLives++;
+			lives.splice(i,1);
+			throwNewLife();
 		}
 	}
 	
@@ -182,9 +248,20 @@ var update = function (modifier) {
 	for(var i = 0; i < brains.length; i++) {
 		brains[i].x -= brains[i].speed;
 		if (brains[i].x < 0) {
-			points += 20;
 			brains.splice(i, 1); //remove monsters which are out of playground
-			throwNewMonster();
+			throwNewBrain();
+		}
+	}
+	
+	/* 
+	~Lives related~
+	Throw a life condition
+	*/
+	for(var i = 0; i < lives.length; i++) {
+		lives[i].x -= lives[i].speed;
+		if (lives[i].x < 0) {
+			lives.splice(i, 1); //remove monsters which are out of playground
+			throwNewLife();
 		}
 	}
 
@@ -225,18 +302,23 @@ var render = function () {
 			ctx.drawImage(brainImage, brains[i].x, brains[i].y);
 		}
 	}
+	if (lifeReady) {
+		for(var i = 0; i < lives.length; i++) {
+			ctx.drawImage(lifeImage, lives[i].x, lives[i].y);
+		}
+	}
 	
 	// Score and Lives
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
 	
 	
-	if (lives === 0) {
+	if (playerLives === 0) {
 	    ctx.font = "32px Helvetica";
 	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
 	}
 	else {
-		ctx.fillText("Lives: " + lives + "   Points: " + points, 32, 32);	
+		ctx.fillText("Lives: " + playerLives + "   Points: " + points, 32, 32);	
 	}
 };
 
@@ -246,7 +328,7 @@ var main = function () {
 	var delta = now - then;
 	
 	//Lives checker
-	if (lives > 0) {
+	if (playerLives > 0) {
 		update(delta / 1000);
 		render();
 	}		
