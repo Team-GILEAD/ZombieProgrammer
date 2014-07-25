@@ -24,6 +24,9 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/hero.png";
 
+
+var monsters = [];
+
 // Monster image
 var monsterReady = false;
 var monsterImage = new Image();
@@ -36,7 +39,19 @@ monsterImage.src = "images/monster.png";
 var hero = {
 	speed: 256 // movement in pixels per second
 };
-var monster = {};
+var Monster = (function() {
+	function Monster(x,y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	return Monster;
+}());
+
+// Filling monsters loops
+for (var i = 0; i < 5; i++) {
+	monsters.push(new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64))));
+}
 
 // Handle keyboard controls
 var keysDown = {};
@@ -49,18 +64,16 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode]; //so the player stops after keyup
 }, false);
 
-// Release new monster when player go thru previous one
+// Release new monster
 var throwNewMonster = function () {
-	
     // Throw the monster somewhere on the screen randomly
-    monster.x = canvas.width;
-    monster.y = 32 + (Math.random() * (canvas.height - 64));
+	new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64)));
 };
 
 // Update game objects
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
-	    hero.y -= hero.speed * modifier;	    
+	    hero.y -= hero.speed * modifier;	
 	}
 	if (40 in keysDown) { // Player holding down
 		hero.y += hero.speed * modifier;
@@ -76,24 +89,30 @@ var update = function (modifier) {
 	~Check for collision~
 	32 is pixel distance: center to edge of objects
 	*/
-	if (
-		hero.x <= (monster.x + 32)
-		&& monster.x <= (hero.x + 32)
-		&& hero.y <= (monster.y + 32)
-		&& monster.y <= (hero.y + 32)
-	) {
-		lives--;
-		throwNewMonster();
+	for(var i = 0; i < monsters.length; i++) {
+		if (
+			hero.x <= (monsters[i].x + 32)
+			&& monsters[i].x <= (hero.x + 32)
+			&& hero.y <= (monsters[i].y + 32)
+			&& monsters[i].y <= (hero.y + 32)
+		) {
+			lives--;
+			monsters.splice(i,1);
+			//throwNewMonster();
+		}
 	}
-
+	
     /* 
 	~Monster related~
 	Throw a monster condition
 	*/
-	monster.x -= 3;
-	if (monster.x < 0) {
-		points += 20;
-	    throwNewMonster();
+	for(var i = 0; i < monsters.length; i++) {
+		monsters[i].x -= 3;
+		if (monsters[i].x < 0) {
+			points += 20;
+			monsters.splice(i, 1); //remove monsters which are out of playground
+			//throwNewMonster();
+		}
 	}
 
     /* 
@@ -126,9 +145,11 @@ var render = function () {
 	}
 
 	if (monsterReady) {
-		ctx.drawImage(monsterImage, monster.x, monster.y);
+		for(var i = 0; i < monsters.length; i++) {
+			ctx.drawImage(monsterImage, monsters[i].x, monsters[i].y);
+		}
 	}
-
+	
 	// Score and Lives
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
@@ -149,9 +170,9 @@ var main = function () {
 	var delta = now - then;
 	
 	//Lives checker
-	if (lives >0) {
-	update(delta / 1000);
-	render();
+	if (lives > 0) {
+		update(delta / 1000);
+		render();
 	}		
 	
 	then = now;
@@ -173,7 +194,5 @@ function startGame() {
     hero.x = canvas.width / 2;
     hero.y = canvas.height / 2;
 
-    // Throw the monster somewhere on the screen randomly
-    monster.x = 32 + (Math.random() * (canvas.width - 64));
-    monster.y = 32 + (Math.random() * (canvas.height - 64));
+    //throwNewMonster();
 }
