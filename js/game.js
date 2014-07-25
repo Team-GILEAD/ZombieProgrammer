@@ -26,6 +26,7 @@ heroImage.src = "images/hero.png";
 
 
 var monsters = [];
+var monstersNum = 20;
 
 // Monster image
 var monsterReady = false;
@@ -51,7 +52,7 @@ var Monster = (function() {
 }());
 
 // Filling monsters loops
-for (var i = 0; i < 5; i++) {
+for (var i = 0; i < monstersNum; i++) {
 	monsters.push(new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64))));
 }
 
@@ -70,7 +71,7 @@ addEventListener("keyup", function (e) {
 var throwNewMonster = function () {
     // Throw the monster somewhere on the screen randomly
 	monsters.push(new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64))));
-	alert(monsters);
+	//alert(monsters);
 };
 
 // Update game objects
