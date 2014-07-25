@@ -132,9 +132,15 @@ var render = function () {
 	// Score and Lives
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
-	ctx.textAlign = "left";
-	ctx.textBaseline = "top";
-	ctx.fillText("Lives: " + lives + "   Points: " + points, 32, 32);	
+	
+	
+	if (lives === 0) {
+	    ctx.font = "32px Helvetica";
+	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
+	}
+	else {
+		ctx.fillText("Lives: " + lives + "   Points: " + points, 32, 32);	
+	}
 };
 
 // The main game loop
@@ -146,13 +152,7 @@ var main = function () {
 	if (lives >0) {
 	update(delta / 1000);
 	render();
-	}	
-	else if (lives === 0) {
-	    ctx.fillStyle = "rgb(250, 250, 250)";
-	    ctx.font = "32px Helvetica";
-	    ctx.fillText("Game Over! Your score: " + points, 32,32);
-	}
-	
+	}		
 	
 	then = now;
 
