@@ -43,9 +43,10 @@ var hero = {
 	y: canvas.height / 2
 };
 var Monster = (function() {
-	function Monster(x,y) {
+	function Monster(x,y, speed) {
 		this.x = x;
 		this.y = y;
+		this.speed = speed;
 	}
 	
 	return Monster;
@@ -55,8 +56,9 @@ var Monster = (function() {
 var throwNewMonster = function () {
     // Throw the monster somewhere on the screen randomly
 	monsters.push(new Monster(
-		canvas.width + (Math.floor((Math.random() * 900) + 1)),
-		32 + (Math.random() * (canvas.height - 64))
+		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
+		32 + (Math.random() * (canvas.height - 64)), // Y position
+		(Math.floor((Math.random() * 8) + 1)) // Speed
 	));
 };
 
@@ -115,7 +117,7 @@ var update = function (modifier) {
 	Throw a monster condition
 	*/
 	for(var i = 0; i < monsters.length; i++) {
-		monsters[i].x -= 3;
+		monsters[i].x -= monsters[i].speed;
 		if (monsters[i].x < 0) {
 			points += 20;
 			monsters.splice(i, 1); //remove monsters which are out of playground
