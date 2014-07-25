@@ -24,10 +24,6 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/hero.png";
 
-
-var monsters = [];
-var monstersNum = 20;
-
 // Monster image
 var monsterReady = false;
 var monsterImage = new Image();
@@ -36,21 +32,45 @@ monsterImage.onload = function () {
 };
 monsterImage.src = "images/monster.png";
 
+// Brain image
+var brainReady = false;
+var brainImage = new Image();
+brainImage.onload = function () {
+	brainReady = true;
+};
+brainImage.src = "images/brain.png";
+
 // Game objects
 var hero = {
 	speed: 256, // movement in pixels per second
 	x: canvas.width / 4,
 	y: canvas.height / 2
 };
+
+var monsters = [];
+var monstersNum = 20;
+
 var Monster = (function() {
-	function Monster(x,y, speed) {
+	function Monster(x,y,speed) {
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
 	}
-	
 	return Monster;
 }());
+
+var brains = [];
+var brainsNum = 3;
+
+var Brain = (function(){
+	function Brain(x,y,speed) {
+		this.x = x;
+		this.y = y;
+		this.speed = speed
+	}
+	return Brain;
+}())
+
 
 // Release new monster
 var throwNewMonster = function () {
@@ -65,6 +85,21 @@ var throwNewMonster = function () {
 // Filling monsters loops
 for (var i = 0; i < monstersNum; i++) {
 	throwNewMonster();
+}
+
+// Release new brain
+var throwNewBrain = function () {
+    // Throw the monster somewhere on the screen randomly
+	brains.push(new Monster(
+		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
+		32 + (Math.random() * (canvas.height - 64)), // Y position
+		(Math.floor((Math.random() * 8) + 1)) // Speed
+	));
+};
+
+// Filling brains loops
+for (var i = 0; i < brainsNum; i++) {
+	throwNewBrain();
 }
 
 // Handle keyboard controls
@@ -99,6 +134,7 @@ var update = function (modifier) {
 	~Check for collision~
 	32 is pixel distance: center to edge of objects
 	*/
+	// Monsters collision
 	for(var i = 0; i < monsters.length; i++) {
 		if (
 			hero.x <= (monsters[i].x + 32)
@@ -111,9 +147,23 @@ var update = function (modifier) {
 			throwNewMonster();
 		}
 	}
+	// Brains Collision
+	for(var i = 0; i < brains.length; i++) {
+		if (
+			hero.x <= (brains[i].x + 32)
+			&& brains[i].x <= (hero.x + 32)
+			&& hero.y <= (brains[i].y + 32)
+			&& brains[i].y <= (hero.y + 32)
+		) {
+			points += 100;
+			brains.splice(i,1);
+			throwNewBrain();
+		}
+	}
+	
 	
     /* 
-	~Monster related~
+	~Monsters related~
 	Throw a monster condition
 	*/
 	for(var i = 0; i < monsters.length; i++) {
@@ -121,6 +171,19 @@ var update = function (modifier) {
 		if (monsters[i].x < 0) {
 			points += 20;
 			monsters.splice(i, 1); //remove monsters which are out of playground
+			throwNewMonster();
+		}
+	}
+	
+	/* 
+	~Brains related~
+	Throw a brain condition
+	*/
+	for(var i = 0; i < brains.length; i++) {
+		brains[i].x -= brains[i].speed;
+		if (brains[i].x < 0) {
+			points += 20;
+			brains.splice(i, 1); //remove monsters which are out of playground
 			throwNewMonster();
 		}
 	}
@@ -149,14 +212,17 @@ var render = function () {
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
-
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
 	}
-
 	if (monsterReady) {
 		for(var i = 0; i < monsters.length; i++) {
 			ctx.drawImage(monsterImage, monsters[i].x, monsters[i].y);
+		}
+	}
+	if (brainReady) {
+		for(var i = 0; i < brains.length; i++) {
+			ctx.drawImage(brainImage, brains[i].x, brains[i].y);
 		}
 	}
 	
