@@ -51,9 +51,18 @@ var Monster = (function() {
 	return Monster;
 }());
 
+// Release new monster
+var throwNewMonster = function () {
+    // Throw the monster somewhere on the screen randomly
+	monsters.push(new Monster(
+		canvas.width + (Math.floor((Math.random() * 900) + 1)),
+		32 + (Math.random() * (canvas.height - 64))
+	));
+};
+
 // Filling monsters loops
 for (var i = 0; i < monstersNum; i++) {
-	monsters.push(new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64))));
+	throwNewMonster();
 }
 
 // Handle keyboard controls
@@ -67,12 +76,7 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode]; //so the player stops after keyup
 }, false);
 
-// Release new monster
-var throwNewMonster = function () {
-    // Throw the monster somewhere on the screen randomly
-	monsters.push(new Monster(canvas.width, 32 + (Math.random() * (canvas.height - 64))));
-	//alert(monsters);
-};
+
 
 // Update game objects
 var update = function (modifier) {
