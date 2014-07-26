@@ -1,5 +1,6 @@
 var points = 0;
 var playerLives = 3; //start lives
+var pause = false;
 
 // Create the canvas on the body
 var canvas = document.createElement("canvas");
@@ -158,130 +159,138 @@ for (var i = 0; i < livesNum; i++) {
 // Handle keyboard controls
 var keysDown = {};
 
-addEventListener("keydown", function (e) {
+addEventListener("keydown", function(e) {
 	keysDown[e.keyCode] = true;
 }, false);
 
-addEventListener("keyup", function (e) {
+addEventListener("keyup", function(e) {
 	delete keysDown[e.keyCode]; //so the player stops after keyup
 }, false);
 
-
-
 // Update game objects
 var update = function (modifier) {
-	if (38 in keysDown) { // Player holding up
-	    hero.y -= hero.speed * modifier;	
-	}
-	if (40 in keysDown) { // Player holding down
-		hero.y += hero.speed * modifier;
-	}
-	if (37 in keysDown) { // Player holding left
-		hero.x -= hero.speed * modifier;
-	}
-	if (39 in keysDown) { // Player holding right
-		hero.x += hero.speed * modifier;
-	}
+	if (pause === false) {
+			
+		if (38 in keysDown) { // Player holding up
+			hero.y -= hero.speed * modifier;	
+		}
+		if (40 in keysDown) { // Player holding down
+			hero.y += hero.speed * modifier;
+		}
+		if (37 in keysDown) { // Player holding left
+			hero.x -= hero.speed * modifier;
+		}
+		if (39 in keysDown) { // Player holding right
+			hero.x += hero.speed * modifier;
+		}
+		if (80 in keysDown) {
+			pause = true;
+		}
 
-	/* 
-	~Check for collision~
-	32 is pixel distance: center to edge of objects
-	*/
-	// Monsters collision
-	for(var i = 0; i < monsters.length; i++) {
-		if (
-			hero.x <= (monsters[i].x + 32)
-			&& monsters[i].x <= (hero.x + 32)
-			&& hero.y <= (monsters[i].y + 32)
-			&& monsters[i].y <= (hero.y + 32)
-		) {
-			playerLives--;
-			monsters.splice(i,1);
-			throwNewMonster();
+		/* 
+		~Check for collision~
+		32 is pixel distance: center to edge of objects
+		*/
+		// Monsters collision
+		for(var i = 0; i < monsters.length; i++) {
+			if (
+				hero.x <= (monsters[i].x + 32)
+				&& monsters[i].x <= (hero.x + 32)
+				&& hero.y <= (monsters[i].y + 32)
+				&& monsters[i].y <= (hero.y + 32)
+			) {
+				playerLives--;
+				monsters.splice(i,1);
+				throwNewMonster();
+			}
 		}
-	}
-	// Brains Collision
-	for(var i = 0; i < brains.length; i++) {
-		if (
-			hero.x <= (brains[i].x + 32)
-			&& brains[i].x <= (hero.x + 32)
-			&& hero.y <= (brains[i].y + 32)
-			&& brains[i].y <= (hero.y + 32)
-		) {
-			points += 1000;
-			brains.splice(i,1);
-			throwNewBrain();
+		// Brains Collision
+		for(var i = 0; i < brains.length; i++) {
+			if (
+				hero.x <= (brains[i].x + 32)
+				&& brains[i].x <= (hero.x + 32)
+				&& hero.y <= (brains[i].y + 32)
+				&& brains[i].y <= (hero.y + 32)
+			) {
+				points += 1000;
+				brains.splice(i,1);
+				throwNewBrain();
+			}
 		}
-	}
-	// Lives Collision
-	for(var i = 0; i < lives.length; i++) {
-		if (
-			hero.x <= (lives[i].x + 32)
-			&& lives[i].x <= (hero.x + 32)
-			&& hero.y <= (lives[i].y + 32)
-			&& lives[i].y <= (hero.y + 32)
-		) {
-			playerLives++;
-			lives.splice(i,1);
-			throwNewLife();
+		// Lives Collision
+		for(var i = 0; i < lives.length; i++) {
+			if (
+				hero.x <= (lives[i].x + 32)
+				&& lives[i].x <= (hero.x + 32)
+				&& hero.y <= (lives[i].y + 32)
+				&& lives[i].y <= (hero.y + 32)
+			) {
+				playerLives++;
+				lives.splice(i,1);
+				throwNewLife();
+			}
 		}
-	}
-	
-	
-    /* 
-	~Monsters related~
-	Throw a monster condition
-	*/
-	for(var i = 0; i < monsters.length; i++) {
-		monsters[i].x -= monsters[i].speed;
-		if (monsters[i].x < 0) {
-			points += 20;
-			monsters.splice(i, 1); //remove monsters which are out of playground
-			throwNewMonster();
+		
+		
+		/* 
+		~Monsters related~
+		Throw a monster condition
+		*/
+		for(var i = 0; i < monsters.length; i++) {
+			monsters[i].x -= monsters[i].speed;
+			if (monsters[i].x < 0) {
+				points += 20;
+				monsters.splice(i, 1); //remove monsters which are out of playground
+				throwNewMonster();
+			}
 		}
-	}
-	
-	/* 
-	~Brains related~
-	Throw a brain condition
-	*/
-	for(var i = 0; i < brains.length; i++) {
-		brains[i].x -= brains[i].speed;
-		if (brains[i].x < 0) {
-			brains.splice(i, 1); //remove monsters which are out of playground
-			throwNewBrain();
+		
+		/* 
+		~Brains related~
+		Throw a brain condition
+		*/
+		for(var i = 0; i < brains.length; i++) {
+			brains[i].x -= brains[i].speed;
+			if (brains[i].x < 0) {
+				brains.splice(i, 1); //remove monsters which are out of playground
+				throwNewBrain();
+			}
 		}
-	}
-	
-	/* 
-	~Lives related~
-	Throw a life condition
-	*/
-	for(var i = 0; i < lives.length; i++) {
-		lives[i].x -= lives[i].speed;
-		if (lives[i].x < 0) {
-			lives.splice(i, 1); //remove monsters which are out of playground
-			throwNewLife();
+		
+		/* 
+		~Lives related~
+		Throw a life condition
+		*/
+		for(var i = 0; i < lives.length; i++) {
+			lives[i].x -= lives[i].speed;
+			if (lives[i].x < 0) {
+				lives.splice(i, 1); //remove monsters which are out of playground
+				throwNewLife();
+			}
 		}
-	}
 
-    /* 
-	~Player related~
-	Keeps the player in the playground
-	*/
-	if (hero.x < 0) {
-	    hero.x = 0;
+		/* 
+		~Player related~
+		Keeps the player in the playground
+		*/
+		if (hero.x < 0) {
+			hero.x = 0;
+		}
+		if (hero.x > 990) {
+			hero.x = 990;
+		}
+		if (hero.y < 0) {
+			hero.y = 0;
+		}
+		if (hero.y > 445) {
+			hero.y = 445;
+		}
 	}
-	if (hero.x > 990) {
-	    hero.x = 990;
+	else {
+		if (80 in keysDown) {
+			pause = false;
+		}
 	}
-	if (hero.y < 0) {
-	    hero.y = 0;
-	}
-	if (hero.y > 445) {
-	    hero.y = 445;
-	}
-
 };
 
 // Draw
@@ -331,8 +340,8 @@ var main = function () {
 	if (playerLives > 0) {
 		update(delta / 1000);
 		render();
-	}		
-	
+	}
+
 	then = now;
 
 	// Request to do this again ASAP
