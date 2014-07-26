@@ -115,7 +115,7 @@ var throwNewMonster = function () {
     // Throw the monster somewhere on the screen randomly
 	monsters.push(new Monster(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
-		32 + (Math.random() * (canvas.height - 64)), // Y position
+		20 + (Math.random() * (canvas.height - 64)), // Y position
 		(Math.floor((Math.random() * 8) + 1)) // Speed
 	));
 };
