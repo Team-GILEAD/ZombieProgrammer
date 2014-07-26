@@ -194,10 +194,10 @@ var update = function (modifier) {
 		// Monsters collision
 		for(var i = 0; i < monsters.length; i++) {
 			if (
-				hero.x <= (monsters[i].x + 32)
-				&& monsters[i].x <= (hero.x + 32)
-				&& hero.y <= (monsters[i].y + 32)
-				&& monsters[i].y <= (hero.y + 32)
+				hero.x <= (monsters[i].x + 48)
+				&& monsters[i].x <= (hero.x + 48)
+				&& hero.y <= (monsters[i].y + 48)
+				&& monsters[i].y <= (hero.y + 48)
 			) {
 				playerLives--;
 				monsters.splice(i,1);
@@ -207,10 +207,10 @@ var update = function (modifier) {
 		// Brains Collision
 		for(var i = 0; i < brains.length; i++) {
 			if (
-				hero.x <= (brains[i].x + 32)
-				&& brains[i].x <= (hero.x + 32)
-				&& hero.y <= (brains[i].y + 32)
-				&& brains[i].y <= (hero.y + 32)
+				hero.x <= (brains[i].x + 48)
+				&& brains[i].x <= (hero.x + 48)
+				&& hero.y <= (brains[i].y + 48)
+				&& brains[i].y <= (hero.y + 48)
 			) {
 				points += 1000;
 				brains.splice(i,1);
@@ -220,10 +220,10 @@ var update = function (modifier) {
 		// Lives Collision
 		for(var i = 0; i < lives.length; i++) {
 			if (
-				hero.x <= (lives[i].x + 32)
-				&& lives[i].x <= (hero.x + 32)
-				&& hero.y <= (lives[i].y + 32)
-				&& lives[i].y <= (hero.y + 32)
+				hero.x <= (lives[i].x + 48)
+				&& lives[i].x <= (hero.x + 48)
+				&& hero.y <= (lives[i].y + 48)
+				&& lives[i].y <= (hero.y + 48)
 			) {
 				playerLives++;
 				lives.splice(i,1);
@@ -276,14 +276,14 @@ var update = function (modifier) {
 		if (hero.x < 0) {
 			hero.x = 0;
 		}
-		if (hero.x > 990) {
-			hero.x = 990;
+		if (hero.x > 976) {
+			hero.x = 976;
 		}
 		if (hero.y < 0) {
 			hero.y = 0;
 		}
-		if (hero.y > 445) {
-			hero.y = 445;
+		if (hero.y > 432) {
+			hero.y = 432;
 		}
 	}
 	else {
