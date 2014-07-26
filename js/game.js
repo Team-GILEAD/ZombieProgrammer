@@ -94,7 +94,7 @@ var Brain = (function(){
 
 // Lives objects
 var lives = [];
-var livesNum = 3;
+var livesNum = 1;
 
 var Life = (function(){
 	function Life(x,y,speed) {
@@ -131,7 +131,7 @@ var throwNewBrain = function () {
 	brains.push(new Brain(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
 		15 + (Math.random() * (canvas.height - 64)), // Y position
-		(Math.floor((Math.random() * 8) + 1)) // Speed
+		(Math.floor((Math.random() * 8) + 5)) // Speed
 	));
 };
 
@@ -146,7 +146,7 @@ var throwNewLife = function () {
 	lives.push(new Life(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
 		15 + (Math.random() * (canvas.height - 64)), // Y position
-		(Math.floor((Math.random() * 8) + 1)) // Speed
+		(Math.floor((Math.random() * 8) + 5)) // Speed
 	));
 };
 
