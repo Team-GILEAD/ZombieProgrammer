@@ -214,6 +214,7 @@ var update = function (modifier) {
 				playerLives--;
 				monsters.splice(i,1);
 				throwNewMonster();
+				pain.currentTime = 0;
 				pain.play();
 			}
 		}
@@ -228,6 +229,7 @@ var update = function (modifier) {
 				points += 1000;
 				brains.splice(i,1);
 				throwNewBrain();
+				blop.currentTime = 0;
 				blop.play();
 			}
 		}
@@ -242,6 +244,7 @@ var update = function (modifier) {
 				playerLives++;
 				lives.splice(i,1);
 				throwNewLife();
+				woosh.currentTime = 0;
 				woosh.play();
 			}
 		}
@@ -340,6 +343,7 @@ var render = function () {
 	if (playerLives === 0) {
 	    ctx.font = "32px Helvetica";
 	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
+		pain.currentTime = 0;
 		gong.play();
 	}
 	else {
