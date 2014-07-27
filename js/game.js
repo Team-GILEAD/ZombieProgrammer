@@ -28,7 +28,7 @@ var heroImage = new Image();
 heroImage.onload = function () {
 	heroReady = true;
 };
-heroImage.src = "images/hero.png";
+heroImage.src = "images/heroRight.png";
 
 // Monster image
 var monsterReady = false;
@@ -53,6 +53,18 @@ lifeImage.onload = function () {
 	lifeReady = true;
 };
 lifeImage.src = "images/life.png";
+
+/*
+----------------------
+---- Game sounds ----
+----------------------
+*/
+
+var blop = new Audio("sounds/blop.mp3");
+var woosh = new Audio("sounds/woosh.mp3");
+var zombie = new Audio("sounds/zombie.mp3");
+var gong = new Audio("sounds/gong.mp3");
+var pain = new Audio("sounds/pain.mp3");
 
 /*
 ----------------------
@@ -202,6 +214,7 @@ var update = function (modifier) {
 				playerLives--;
 				monsters.splice(i,1);
 				throwNewMonster();
+				pain.play();
 			}
 		}
 		// Brains Collision
@@ -215,6 +228,7 @@ var update = function (modifier) {
 				points += 1000;
 				brains.splice(i,1);
 				throwNewBrain();
+				blop.play();
 			}
 		}
 		// Lives Collision
@@ -228,6 +242,7 @@ var update = function (modifier) {
 				playerLives++;
 				lives.splice(i,1);
 				throwNewLife();
+				woosh.play();
 			}
 		}
 		
@@ -325,6 +340,7 @@ var render = function () {
 	if (playerLives === 0) {
 	    ctx.font = "32px Helvetica";
 	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
+		gong.play();
 	}
 	else {
 		ctx.fillText("Lives: " + playerLives + "   Points: " + points, 32, 32);	
@@ -340,6 +356,7 @@ var main = function () {
 	if (playerLives > 0) {
 		update(delta / 1000);
 		render();
+		
 	}
 
 	then = now;
