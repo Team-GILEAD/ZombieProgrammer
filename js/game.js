@@ -61,10 +61,9 @@ lifeImage.src = "images/life.png";
 */
 
 var blop = new Audio("sounds/blop.mp3");
-var woosh = new Audio("sounds/woosh.mp3");
-var zombie = new Audio("sounds/zombie.mp3");
 var gong = new Audio("sounds/gong.mp3");
 var pain = new Audio("sounds/pain.mp3");
+var soundtrack = new Audio("sounds/soundtrack.mp3");
 
 /*
 ----------------------
@@ -244,8 +243,8 @@ var update = function (modifier) {
 				playerLives++;
 				lives.splice(i,1);
 				throwNewLife();
-				woosh.currentTime = 0;
-				woosh.play();
+				blop.currentTime = 0;
+				blop.play();
 			}
 		}
 		
@@ -345,6 +344,7 @@ var render = function () {
 	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
 		pain.currentTime = 0;
 		gong.play();
+		soundtrack.currentTime = 180;
 	}
 	else {
 		ctx.fillText("Lives: " + playerLives + "   Points: " + points, 32, 32);	
@@ -360,6 +360,7 @@ var main = function () {
 	if (playerLives > 0) {
 		update(delta / 1000);
 		render();
+		soundtrack.play();
 		
 	}
 
