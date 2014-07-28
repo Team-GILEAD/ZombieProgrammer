@@ -36,7 +36,7 @@ var monsterImage = new Image();
 monsterImage.onload = function () {
 	monsterReady = true;
 };
-monsterImage.src = "images/invader.png";
+monsterImage.src = "images/monster.png";
 
 // Brain image
 var brainReady = false;
