@@ -30,13 +30,13 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/heroRight.png";
 
-// Invader image
+// Invaders image
 var invaderReady = false;
 var invaderImage = new Image();
 invaderImage.onload = function () {
 	invaderReady = true;
 };
-invaderImage.src = "images/invader.png";
+invaderImage.src = "images/invader1.png";
 
 // Brain image
 var brainReady = false;
@@ -82,10 +82,11 @@ var invaders = [];
 var invadersNum = 20;
 
 var Invader = (function() {
-	function Invader(x,y,speed) {
+	function Invader(x,y,speed, img) {
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
+		this.img = img;
 	}
 	return Invader;
 }());
@@ -124,10 +125,12 @@ var Life = (function(){
 // Release new invader
 var throwNewInvader = function () {
     // Throw the invader somewhere on the screen randomly
+	
 	invaders.push(new Invader(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
 		15 + (Math.random() * (canvas.height - 64)), // Y position
-		(Math.floor((Math.random() * 8) + 1)) // Speed
+		(Math.floor((Math.random() * 8) + 1)), // Speed
+		(Math.floor((Math.random() * 3) + 1)) // Image
 	));
 };
 
@@ -209,7 +212,7 @@ var update = function (modifier) {
 		// Invaders collision
 		for(var i = 0; i < invaders.length; i++) {
 			if (
-				hero.x <= (invaders[i].x + 48)
+				hero.x <= (invaders[i].x + 34)
 				&& invaders[i].x <= (hero.x + 48)
 				&& hero.y <= (invaders[i].y + 34)
 				&& invaders[i].y <= (hero.y + 48)
@@ -323,7 +326,24 @@ var render = function () {
 		ctx.drawImage(heroImage, hero.x, hero.y);
 	}
 	if (invaderReady) {
+		invaderImage.src = "images/invader1.png";
 		for(var i = 0; i < invaders.length; i++) {
+			/*switch(invaders[i].img) {
+				case 1:
+					invaderImage.src = "images/invader1.png"; 
+					break;
+				case 2:
+					invaderImage.src = "images/invader2.png"; 
+					break;
+				case 3:
+					invaderImage.src = "images/invader3.png"; 
+					break;
+				default:
+					invaderImage.src = "images/invader1.png";
+					alert("default");
+					break;
+			}*/
+			
 			ctx.drawImage(invaderImage, invaders[i].x, invaders[i].y);
 		}
 	}
@@ -362,10 +382,9 @@ var main = function () {
 	
 	//Lives checker
 	if (playerLives > 0) {
-		update(delta / 1000);
+		update(delta/1000);
 		render();
 		soundtrack.play();
-		
 	}
 
 	then = now;
