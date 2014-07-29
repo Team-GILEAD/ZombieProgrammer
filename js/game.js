@@ -30,13 +30,13 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/heroRight.png";
 
-// Monster image
-var monsterReady = false;
-var monsterImage = new Image();
-monsterImage.onload = function () {
-	monsterReady = true;
+// Invader image
+var invaderReady = false;
+var invaderImage = new Image();
+invaderImage.onload = function () {
+	invaderReady = true;
 };
-monsterImage.src = "images/monster.png";
+invaderImage.src = "images/invader.png";
 
 // Brain image
 var brainReady = false;
@@ -77,17 +77,17 @@ var hero = {
 	y: canvas.height / 2
 };
 
-// Monsters objects
-var monsters = [];
-var monstersNum = 20;
+// Invaders objects
+var invaders = [];
+var invadersNum = 20;
 
-var Monster = (function() {
-	function Monster(x,y,speed) {
+var Invader = (function() {
+	function Invader(x,y,speed) {
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
 	}
-	return Monster;
+	return Invader;
 }());
 
 // Brains objects
@@ -121,24 +121,24 @@ var Life = (function(){
 --Release objects--
 -------------------
 */
-// Release new monster
-var throwNewMonster = function () {
-    // Throw the monster somewhere on the screen randomly
-	monsters.push(new Monster(
+// Release new invader
+var throwNewInvader = function () {
+    // Throw the invader somewhere on the screen randomly
+	invaders.push(new Invader(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
 		15 + (Math.random() * (canvas.height - 64)), // Y position
 		(Math.floor((Math.random() * 8) + 1)) // Speed
 	));
 };
 
-// Filling monsters loops
-for (var i = 0; i < monstersNum; i++) {
-	throwNewMonster();
+// Filling invaders loops
+for (var i = 0; i < invadersNum; i++) {
+	throwNewInvader();
 }
 
 // Release new brain
 var throwNewBrain = function () {
-    // Throw the monster somewhere on the screen randomly
+    // Throw the invader somewhere on the screen randomly
 	brains.push(new Brain(
 		canvas.width + (Math.floor((Math.random() * 900) + 1)), // X position
 		15 + (Math.random() * (canvas.height - 64)), // Y position
@@ -206,17 +206,17 @@ var update = function (modifier) {
 		~Check for collision~
 		32 is pixel distance: center to edge of objects
 		*/
-		// Monsters collision
-		for(var i = 0; i < monsters.length; i++) {
+		// Invaders collision
+		for(var i = 0; i < invaders.length; i++) {
 			if (
-				hero.x <= (monsters[i].x + 48)
-				&& monsters[i].x <= (hero.x + 48)
-				&& hero.y <= (monsters[i].y + 48)
-				&& monsters[i].y <= (hero.y + 48)
+				hero.x <= (invaders[i].x + 48)
+				&& invaders[i].x <= (hero.x + 48)
+				&& hero.y <= (invaders[i].y + 48)
+				&& invaders[i].y <= (hero.y + 48)
 			) {
 				playerLives--;
-				monsters.splice(i,1);
-				throwNewMonster();
+				invaders.splice(i,1);
+				throwNewInvader();
 				pain.currentTime = 0;
 				pain.play();
 			}
@@ -254,15 +254,15 @@ var update = function (modifier) {
 		
 		
 		/* 
-		~Monsters related~
-		Throw a monster condition
+		~Invaders related~
+		Throw a invader condition
 		*/
-		for(var i = 0; i < monsters.length; i++) {
-			monsters[i].x -= monsters[i].speed;
-			if (monsters[i].x < 0) {
+		for(var i = 0; i < invaders.length; i++) {
+			invaders[i].x -= invaders[i].speed;
+			if (invaders[i].x < 0) {
 				points += 20;
-				monsters.splice(i, 1); //remove monsters which are out of playground
-				throwNewMonster();
+				invaders.splice(i, 1); //remove invaders which are out of playground
+				throwNewInvader();
 			}
 		}
 		
@@ -273,7 +273,7 @@ var update = function (modifier) {
 		for(var i = 0; i < brains.length; i++) {
 			brains[i].x -= brains[i].speed;
 			if (brains[i].x < 0) {
-				brains.splice(i, 1); //remove monsters which are out of playground
+				brains.splice(i, 1); //remove invaders which are out of playground
 				throwNewBrain();
 			}
 		}
@@ -285,7 +285,7 @@ var update = function (modifier) {
 		for(var i = 0; i < lives.length; i++) {
 			lives[i].x -= lives[i].speed;
 			if (lives[i].x < 0) {
-				lives.splice(i, 1); //remove monsters which are out of playground
+				lives.splice(i, 1); //remove invaders which are out of playground
 				throwNewLife();
 			}
 		}
@@ -322,9 +322,9 @@ var render = function () {
 	if (heroReady) {
 		ctx.drawImage(heroImage, hero.x, hero.y);
 	}
-	if (monsterReady) {
-		for(var i = 0; i < monsters.length; i++) {
-			ctx.drawImage(monsterImage, monsters[i].x, monsters[i].y);
+	if (invaderReady) {
+		for(var i = 0; i < invaders.length; i++) {
+			ctx.drawImage(invaderImage, invaders[i].x, invaders[i].y);
 		}
 	}
 	if (brainReady) {
