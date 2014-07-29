@@ -211,7 +211,7 @@ var update = function (modifier) {
 			if (
 				hero.x <= (invaders[i].x + 48)
 				&& invaders[i].x <= (hero.x + 48)
-				&& hero.y <= (invaders[i].y + 48)
+				&& hero.y <= (invaders[i].y + 34)
 				&& invaders[i].y <= (hero.y + 48)
 			) {
 				playerLives--;
@@ -226,7 +226,7 @@ var update = function (modifier) {
 			if (
 				hero.x <= (brains[i].x + 48)
 				&& brains[i].x <= (hero.x + 48)
-				&& hero.y <= (brains[i].y + 48)
+				&& hero.y <= (brains[i].y + 34)
 				&& brains[i].y <= (hero.y + 48)
 			) {
 				points += 1000;
@@ -241,7 +241,7 @@ var update = function (modifier) {
 			if (
 				hero.x <= (lives[i].x + 48)
 				&& lives[i].x <= (hero.x + 48)
-				&& hero.y <= (lives[i].y + 48)
+				&& hero.y <= (lives[i].y + 34)
 				&& lives[i].y <= (hero.y + 48)
 			) {
 				playerLives++;
