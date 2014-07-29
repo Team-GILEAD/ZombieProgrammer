@@ -36,7 +36,7 @@ var invaderImage = new Image();
 invaderImage.onload = function () {
 	invaderReady = true;
 };
-invaderImage.src = "images/invader1.png";
+invaderImage.src = "images/invader.png";
 
 // Brain image
 var brainReady = false;
@@ -326,24 +326,7 @@ var render = function () {
 		ctx.drawImage(heroImage, hero.x, hero.y);
 	}
 	if (invaderReady) {
-		invaderImage.src = "images/invader1.png";
-		for(var i = 0; i < invaders.length; i++) {
-			/*switch(invaders[i].img) {
-				case 1:
-					invaderImage.src = "images/invader1.png"; 
-					break;
-				case 2:
-					invaderImage.src = "images/invader2.png"; 
-					break;
-				case 3:
-					invaderImage.src = "images/invader3.png"; 
-					break;
-				default:
-					invaderImage.src = "images/invader1.png";
-					alert("default");
-					break;
-			}*/
-			
+		for(var i = 0; i < invaders.length; i++) {			
 			ctx.drawImage(invaderImage, invaders[i].x, invaders[i].y);
 		}
 	}
