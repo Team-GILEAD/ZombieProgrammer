@@ -67,7 +67,7 @@ lifeImage.src = "images/life.png";
 */
 
 var blop = new Audio("sounds/blop.mp3");
-var gong = new Audio("sounds/gong.mp3");
+var register = new Audio("sounds/register.mp3");
 var pain = new Audio("sounds/pain.mp3");
 var soundtrack = new Audio("sounds/soundtrack.mp3");
 
@@ -353,12 +353,12 @@ var render = function () {
 	
 	
 	if (playerLives === 0) {	    
-		ctx.drawImage(overImg, 200, 0);
+		ctx.drawImage(overImg, 180, 0);
 		ctx.font = "32px Helvetica";
 		ctx.fillStyle = "#ff0000"; 
 	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
 		pain.currentTime = 0;
-		gong.play();
+		register.play();
 		soundtrack.currentTime = 180;
 	}
 	else {
