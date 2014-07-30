@@ -28,7 +28,9 @@ var heroImage = new Image();
 heroImage.onload = function () {
 	heroReady = true;
 };
-heroImage.src = "images/heroRight.png";
+var heroImageSrcRight = "images/heroRight.png";
+var heroImageSrcLeft = "images/heroLeft.png";
+heroImage.src = heroImageSrcRight;
 
 // Invaders image
 var invaderReady = false;
@@ -187,19 +189,19 @@ var update = function (modifier) {
 			
 		if (38 in keysDown) { // Player holding up
 			hero.y -= hero.speed * modifier;	
-			heroImage.src = "images/heroRight.png";
+			heroImage.src = heroImageSrcRight;
 		}
 		if (40 in keysDown) { // Player holding down
 			hero.y += hero.speed * modifier;
-			heroImage.src = "images/heroRight.png";
+			heroImage.src = heroImageSrcRight;
 		}
 		if (37 in keysDown) { // Player holding left
 			hero.x -= hero.speed * modifier;
-			heroImage.src = "images/heroLeft.png";
+			heroImage.src = heroImageSrcLeft;
 		}
 		if (39 in keysDown) { // Player holding right
 			hero.x += hero.speed * modifier;
-			heroImage.src = "images/heroRight.png";
+			heroImage.src = heroImageSrcRight;
 		}
 		if (80 in keysDown) {
 			pause = true;
@@ -355,6 +357,11 @@ var render = function () {
 	}
 	else {
 		ctx.fillText("Lives: " + playerLives + "   Points: " + points, 32, 32);	
+	}
+	
+	if (points > 5000){
+		heroImageSrcRight = "images/oldHeroRight.png";
+		heroImageSrcLeft = "images/oldHeroLeft.png";	
 	}
 };
 
