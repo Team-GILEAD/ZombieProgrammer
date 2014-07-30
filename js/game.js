@@ -22,6 +22,10 @@ bgImage.onload = function () {
 };
 bgImage.src = "images/bg.jpg";
 
+//Game Over image
+var overImg = new Image();        
+overImg.src = "images/mcDon.jpg"; 
+
 // Hero image
 var heroReady = false;
 var heroImage = new Image();
@@ -348,8 +352,10 @@ var render = function () {
 	ctx.font = "24px Helvetica";
 	
 	
-	if (playerLives === 0) {
-	    ctx.font = "32px Helvetica";
+	if (playerLives === 0) {	    
+		ctx.drawImage(overImg, 200, 0);
+		ctx.font = "32px Helvetica";
+		ctx.fillStyle = "#ff0000"; 
 	    ctx.fillText("Game Over! Your score: " + points, 335, 220);
 		pain.currentTime = 0;
 		gong.play();
